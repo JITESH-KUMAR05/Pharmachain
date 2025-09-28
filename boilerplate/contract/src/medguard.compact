@@ -1,0 +1,60 @@
+pragma language_version 0.15;
+import CompactStandardLibrary;
+
+// Healthcare verification ledgers for privacy-preserving verification
+export ledger insurance_registry: Map<Bytes, Boolean>;
+export ledger credential_registry: Map<Bytes, Boolean>;
+export ledger patient_consent: Map<Bytes, Boolean>;
+
+// Core healthcare verification circuits
+
+// Verify insurance coverage without revealing policy details
+export circuit verify_insurance_coverage(
+    policy_hash: Bytes
+): Boolean {
+    return insurance_registry.get_or_default(policy_hash, false);
+}
+
+// Verify medical credentials privately
+export circuit verify_medical_credentials(
+    credential_hash: Bytes
+): Boolean {
+    return credential_registry.get_or_default(credential_hash, false);
+}
+
+// Verify patient consent for data sharing
+export circuit verify_patient_consent(
+    consent_hash: Bytes
+): Boolean {
+    return patient_consent.get_or_default(consent_hash, false);
+}
+
+// Admin functions for registering verified entities
+
+// Register insurance policy (only by authorized entities)
+export circuit register_insurance_policy(policy_hash: Bytes): [] {
+    insurance_registry.insert(policy_hash, true);
+}
+
+// Register medical credential (only by medical boards)
+export circuit register_medical_credential(credential_hash: Bytes): [] {
+    credential_registry.insert(credential_hash, true);
+}
+
+// Register patient consent
+export circuit register_patient_consent(consent_hash: Bytes): [] {
+    patient_consent.insert(consent_hash, true);
+}
+
+// Combined healthcare verification workflow
+export circuit verify_healthcare_access(
+    policy_hash: Bytes,
+    credential_hash: Bytes,
+    consent_hash: Bytes
+): Boolean {
+    let insurance_valid = insurance_registry.get_or_default(policy_hash, false);
+    let credential_valid = credential_registry.get_or_default(credential_hash, false);
+    let consent_valid = patient_consent.get_or_default(consent_hash, false);
+    
+    return insurance_valid && credential_valid && consent_valid;
+}

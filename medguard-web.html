@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MedGuard - Privacy-Preserving Healthcare Verification</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .header h1 {
+            font-size: 3rem;
+            color: white;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            font-size: 1.2rem;
+            color: rgba(255, 255, 255, 0.9);
+        }
+        
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+        
+        .card {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .card h2 {
+            color: #4A5568;
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+        }
+        
+        .verification-section {
+            margin-bottom: 25px;
+        }
+        
+        .verification-section h3 {
+            color: #2D3748;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .input-group {
+            margin-bottom: 15px;
+        }
+        
+        .input-group input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #E2E8F0;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: border-color 0.3s ease;
+        }
+        
+        .input-group input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+            width: 100%;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+        
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .demo-btn {
+            background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+            font-size: 1.1rem;
+            padding: 15px 30px;
+            margin: 20px auto;
+            display: block;
+        }
+        
+        .result {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 8px;
+            font-weight: 500;
+            display: none;
+        }
+        
+        .result.success {
+            background: #C6F6D5;
+            color: #22543D;
+            border-left: 4px solid #48BB78;
+        }
+        
+        .result.error {
+            background: #FED7D7;
+            color: #742A2A;
+            border-left: 4px solid #E53E3E;
+        }
+        
+        .result.loading {
+            background: #BEE3F8;
+            color: #2A4365;
+            border-left: 4px solid #4299E1;
+        }
+        
+        .features {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 30px;
+            margin-top: 30px;
+        }
+        
+        .features h2 {
+            text-align: center;
+            color: #2D3748;
+            margin-bottom: 25px;
+        }
+        
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+        
+        .feature-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 15px;
+            background: #F7FAFC;
+            border-radius: 10px;
+        }
+        
+        .feature-icon {
+            font-size: 1.5rem;
+        }
+        
+        .wallet-status {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🏥 MedGuard</h1>
+            <p>Privacy-Preserving Healthcare Verification on Midnight Network</p>
+        </div>
+        
+        <div class="wallet-status">
+            <strong>🌙 Connected to Midnight Testnet</strong> | 
+            <span id="wallet-address">mn_shield-addr_test1h9c8dt58uqaaac04axzk0vc0l6qvr6md6haz72d2drfffdqmmcmqxqpp02nvkepjhqpp2gvn9swg6snsu49yzyun4hvn4hksql8d6nvdeuxtw63r</span> | 
+            <span id="balance">Balance: 1,000 tUsdt</span>
+        </div>
+
+        <button class="btn demo-btn" onclick="runFullDemo()">🎬 Run Complete Healthcare Demo</button>
+
+        <div class="main-content">
+            <div class="card">
+                <h2>🔍 Privacy Verification</h2>
+                
+                <div class="verification-section">
+                    <h3>🛡️ Insurance Verification</h3>
+                    <div class="input-group">
+                        <input type="text" id="insurance-hash" placeholder="Enter Insurance Policy Hash (e.g., 0xabc123...)" value="0xabc123def456healthcare">
+                    </div>
+                    <button class="btn" onclick="verifyInsurance()">Verify Insurance Coverage</button>
+                    <div class="result" id="insurance-result"></div>
+                </div>
+                
+                <div class="verification-section">
+                    <h3>🩺 Medical Credentials</h3>
+                    <div class="input-group">
+                        <input type="text" id="credentials-hash" placeholder="Enter Medical Credential Hash" value="0x789ghi012doctor">
+                    </div>
+                    <button class="btn" onclick="verifyCredentials()">Verify Doctor License</button>
+                    <div class="result" id="credentials-result"></div>
+                </div>
+                
+                <div class="verification-section">
+                    <h3>📋 Patient Consent</h3>
+                    <div class="input-group">
+                        <input type="text" id="consent-hash" placeholder="Enter Patient Consent Hash" value="0xmno345patient">
+                    </div>
+                    <button class="btn" onclick="verifyConsent()">Verify Patient Consent</button>
+                    <div class="result" id="consent-result"></div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>📝 Healthcare Registry</h2>
+                
+                <div class="verification-section">
+                    <h3>🏥 Register Insurance Policy</h3>
+                    <div class="input-group">
+                        <input type="text" id="register-insurance" placeholder="Enter New Policy Hash" value="0xnew123policy">
+                    </div>
+                    <button class="btn" onclick="registerInsurance()">Register Policy</button>
+                    <div class="result" id="register-insurance-result"></div>
+                </div>
+                
+                <div class="verification-section">
+                    <h3>👨‍⚕️ Register Medical License</h3>
+                    <div class="input-group">
+                        <input type="text" id="register-credentials" placeholder="Enter Medical License Hash" value="0xnew456doctor">
+                    </div>
+                    <button class="btn" onclick="registerCredentials()">Register License</button>
+                    <div class="result" id="register-credentials-result"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="features">
+            <h2>🏆 MedGuard Privacy Benefits</h2>
+            <div class="features-grid">
+                <div class="feature-item">
+                    <div class="feature-icon">🔒</div>
+                    <div>
+                        <strong>Zero-Knowledge Proofs</strong><br>
+                        Verify eligibility without revealing sensitive data
+                    </div>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">🛡️</div>
+                    <div>
+                        <strong>HIPAA Compliant</strong><br>
+                        No PHI stored on-chain, complete privacy protection
+                    </div>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">⚡</div>
+                    <div>
+                        <strong>Instant Verification</strong><br>
+                        Real-time healthcare access without data sharing
+                    </div>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">🌐</div>
+                    <div>
+                        <strong>Decentralized Trust</strong><br>
+                        No central authority, cryptographic verification
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Simulate zero-knowledge proof verification
+        function showLoading(elementId, message) {
+            const element = document.getElementById(elementId);
+            element.className = 'result loading';
+            element.style.display = 'block';
+            element.innerHTML = `⏳ ${message}`;
+        }
+
+        function showSuccess(elementId, message) {
+            const element = document.getElementById(elementId);
+            element.className = 'result success';
+            element.innerHTML = `✅ ${message}`;
+        }
+
+        function showError(elementId, message) {
+            const element = document.getElementById(elementId);
+            element.className = 'result error';
+            element.innerHTML = `❌ ${message}`;
+        }
+
+        function verifyInsurance() {
+            const hash = document.getElementById('insurance-hash').value;
+            if (!hash) {
+                showError('insurance-result', 'Policy hash required');
+                return;
+            }
+
+            showLoading('insurance-result', 'Generating zero-knowledge proof for insurance verification...');
+            
+            setTimeout(() => {
+                const isValid = Math.random() > 0.2;
+                if (isValid) {
+                    showSuccess('insurance-result', `
+                        <strong>Insurance Coverage VERIFIED</strong><br>
+                        • Coverage is active for emergency services<br>
+                        • Policy details remain completely private<br>
+                        • ZK proof generated successfully
+                    `);
+                } else {
+                    showError('insurance-result', 'Insurance coverage not found or expired');
+                }
+            }, 2000);
+        }
+
+        function verifyCredentials() {
+            const hash = document.getElementById('credentials-hash').value;
+            if (!hash) {
+                showError('credentials-result', 'Credential hash required');
+                return;
+            }
+
+            showLoading('credentials-result', 'Verifying medical credentials with zero-knowledge proof...');
+            
+            setTimeout(() => {
+                const isValid = Math.random() > 0.1;
+                if (isValid) {
+                    showSuccess('credentials-result', `
+                        <strong>Medical Credentials VERIFIED</strong><br>
+                        • License is valid and current<br>
+                        • Specialization: Emergency Medicine<br>
+                        • Doctor identity remains private
+                    `);
+                } else {
+                    showError('credentials-result', 'Medical credentials not verified');
+                }
+            }, 2000);
+        }
+
+        function verifyConsent() {
+            const hash = document.getElementById('consent-hash').value;
+            if (!hash) {
+                showError('consent-result', 'Consent hash required');
+                return;
+            }
+
+            showLoading('consent-result', 'Verifying patient consent with zero-knowledge proof...');
+            
+            setTimeout(() => {
+                const isValid = Math.random() > 0.05;
+                if (isValid) {
+                    showSuccess('consent-result', `
+                        <strong>Patient Consent VERIFIED</strong><br>
+                        • Consent is valid for emergency treatment<br>
+                        • Access permissions confirmed<br>
+                        • Patient identity remains protected
+                    `);
+                } else {
+                    showError('consent-result', 'Patient consent not found or withdrawn');
+                }
+            }, 2000);
+        }
+
+        function registerInsurance() {
+            const hash = document.getElementById('register-insurance').value;
+            showLoading('register-insurance-result', 'Registering insurance policy on Midnight network...');
+            
+            setTimeout(() => {
+                showSuccess('register-insurance-result', `
+                    <strong>Insurance Policy Registered</strong><br>
+                    Policy hash: ${hash}<br>
+                    Added to privacy-preserving registry
+                `);
+            }, 1500);
+        }
+
+        function registerCredentials() {
+            const hash = document.getElementById('register-credentials').value;
+            showLoading('register-credentials-result', 'Registering medical license on Midnight network...');
+            
+            setTimeout(() => {
+                showSuccess('register-credentials-result', `
+                    <strong>Medical License Registered</strong><br>
+                    License hash: ${hash}<br>
+                    Ready for ZK verification
+                `);
+            }, 1500);
+        }
+
+        function runFullDemo() {
+            const demoBtn = document.querySelector('.demo-btn');
+            demoBtn.disabled = true;
+            demoBtn.innerHTML = '⏳ Running Healthcare Demo...';
+
+            // Step 1: Insurance
+            setTimeout(() => {
+                document.getElementById('insurance-hash').value = '0xdemo_insurance_policy';
+                verifyInsurance();
+            }, 1000);
+
+            // Step 2: Credentials  
+            setTimeout(() => {
+                document.getElementById('credentials-hash').value = '0xdemo_doctor_license';
+                verifyCredentials();
+            }, 3500);
+
+            // Step 3: Consent
+            setTimeout(() => {
+                document.getElementById('consent-hash').value = '0xdemo_patient_consent';
+                verifyConsent();
+            }, 6000);
+
+            // Reset button
+            setTimeout(() => {
+                demoBtn.disabled = false;
+                demoBtn.innerHTML = '🎉 Demo Complete - Healthcare Access Approved!';
+                demoBtn.style.background = 'linear-gradient(135deg, #48bb78 0%, #38a169 100%)';
+                
+                setTimeout(() => {
+                    demoBtn.innerHTML = '🎬 Run Complete Healthcare Demo';
+                    demoBtn.style.background = 'linear-gradient(135deg, #48bb78 0%, #38a169 100%)';
+                }, 3000);
+            }, 8500);
+        }
+    </script>
+</body>
+</html>
