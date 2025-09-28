@@ -524,7 +524,6 @@ We welcome contributions to make pharmaceutical supply chains safer worldwide!
 | 🔄 GUI Interface | Planned | Web-based contract interaction |
 | 🔄 Contract Templates | Planned | Pre-built contract examples |
 
-**Last Updated**: June 13, 2025  
 Built with ❤️ for the Midnight ecosystem 🌙
 
 Empowering developers to build privacy-preserving applications with zero-knowledge proofs.
